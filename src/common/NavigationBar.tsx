@@ -23,25 +23,25 @@ const NavigationBar: React.FC = () => {
 
     return (
         <nav
-            className={`w-full flex flex-row items-center justify-start h-[56px] fixed top-0 right-0 left-0 bg-black px-6 gap-4 border-b border-b-neutral-900`}
+            className={`w-full flex flex-row items-center justify-start h-[56px] fixed top-0 right-0 left-0 bg-black p-root-container gap-4 border-b border-b-neutral-900 z-[100]`}
         >
             <button
-                className="lg:hidden lg:invisible flex items-center justify-center text-neutral-300 text-xl"
+                className="md:hidden md:invisible flex items-center justify-center text-neutral-300 text-lg"
                 onClick={() => setShow(!show)}
             >
                 {show ? <FaX /> : <FaBars />}
             </button>
             <BrandLogo />
             <div
-                className={`w-full flex-col lg:flex-row bg-black gap-4 lg:flex lg:visible lg:relative lg:p-0
-                ${show ? "flex absolute top-full right-0 p-4" : "hidden invisible"}`}
+                className={`w-full flex-col items-center justify-center md:flex-row bg-black gap-6 md:flex md:visible md:relative md:p-0 md:px-0
+                ${show ? "flex absolute top-full right-0 p-4 p-root-container" : "hidden invisible"}`}
             >
                 {navLinks.map((l, idx) => (
                     <NavLink
                         key={idx.toString() + l}
                         to={l.path}
                         className={({ isActive }) =>
-                            `lg:hover:text-neutral-300 ${isActive ? "text-neutral-100" : ""}`
+                            `md:hover:text-neutral-300 ${isActive ? "text-neutral-100" : ""}`
                         }
                     >
                         {l.name}

@@ -13,10 +13,30 @@ html {
     padding: 0;
     outline: none;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
 body {
     font-family: "Roboto", sans-serif;
     font-size: 16px;
-    @apply bg-black text-neutral-400 text-sm;
+    @apply bg-black text-neutral-400 pt-[56px];
+}
+
+.p-root-container {
+    @apply px-6 md:px-10 lg:px-14;
+}
+
+.hero-text {
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+}
+
+.hero-linear-bg {
+    background: linear-gradient(
+        180deg,
+        #000000 0%,
+        transparent 50%,
+        #000000 100%
+    );
 }
