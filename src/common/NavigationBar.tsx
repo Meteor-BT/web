@@ -53,7 +53,7 @@ const NavigationBar: React.FC = () => {
                 href="https://github.com/Meteor-BT"
                 target="_blank"
                 rel="noreferrer"
-                className="text-xl ml-auto"
+                className="text-xl ml-auto text-white"
             >
                 <FaGithub />
             </a>
