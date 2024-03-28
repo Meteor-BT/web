@@ -3,13 +3,16 @@ import { Outlet } from "react-router-dom";
 import ThemeProvider from "@/modules/theme/ThemeProvider";
 import NavigationBar from "@/common/NavigationBar";
 import Footer from "@/common/Footer";
+import WeatherProvider from "@/modules/weather/WeatherProvider";
 
 const Root: React.FC = () => {
     return (
         <ThemeProvider>
-            <NavigationBar />
-            <Outlet />
-            <Footer />
+            <WeatherProvider>
+                <NavigationBar />
+                <Outlet />
+                <Footer />
+            </WeatherProvider>
         </ThemeProvider>
     );
 };

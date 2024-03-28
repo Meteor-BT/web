@@ -26,7 +26,7 @@ const NavigationBar: React.FC = () => {
             className={`w-full flex flex-row items-center justify-start h-[56px] fixed top-0 right-0 left-0 bg-black p-root-container gap-4 border-b border-b-neutral-900 z-[100]`}
         >
             <button
-                className="md:hidden md:invisible flex items-center justify-center text-neutral-300 text-lg"
+                className="md:hidden md:invisible flex items-center justify-center text-neutral-400 text-lg"
                 onClick={() => setShow(!show)}
             >
                 {show ? <FaX /> : <FaBars />}
@@ -41,7 +41,7 @@ const NavigationBar: React.FC = () => {
                         key={idx.toString() + l}
                         to={l.path}
                         className={({ isActive }) =>
-                            `md:hover:text-neutral-300 ${isActive ? "text-neutral-100" : ""}`
+                            `md:hover:text-neutral-400 ${isActive ? "text-neutral-100" : ""}`
                         }
                     >
                         {l.name}
