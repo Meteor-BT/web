@@ -28,6 +28,11 @@ const Dropdown: React.FC<Props> = ({
         setShow(false);
     });
 
+    function onClick(item: DropdownItem) {
+        item.onClick && item.onClick(item.id);
+        setShow(false);
+    }
+
     return (
         <div ref={containerRef} className="flex relative">
             <Button
@@ -42,7 +47,7 @@ const Dropdown: React.FC<Props> = ({
                 />
             </Button>
             <div
-                className={`absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity]
+                className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity]
                     ${show ? "opacity-100 visible flex flex-col" : "opacity-0 invisible hidden pointer-events-none"}`}
             >
                 {items.map((item, idx) => (
@@ -50,7 +55,7 @@ const Dropdown: React.FC<Props> = ({
                         key={idx.toString() + item.id}
                         variant="text"
                         className="w-full"
-                        onClick={() => item.onClick && item.onClick(item.id)}
+                        onClick={() => onClick(item)}
                     >
                         {item.label}
                     </Button>
