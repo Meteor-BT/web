@@ -1,0 +1,5 @@
+services:
+    web:
+        image: sifatulrabbi/meteor-bt-web:0.1.0-dev
+        ports:
+            - "80:80"
