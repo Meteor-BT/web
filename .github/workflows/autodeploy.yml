@@ -1,0 +1,82 @@
+name: CI/CD
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    VERSION: 0.1.0
+    NODE_VERSION: 20.11.1
+
+jobs:
+    deploy-on-hosting-server:
+        name: Deploy on hosting server
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup QEMU
+              uses: docker/setup-qemu-action@v2
+
+            - name: Setup Docker buildx
+              uses: docker/setup-buildx-action@v2
+
+            - name: Login to Docker hub
+              uses: docker/login-action@v2
+              with:
+                  username: sifatulrabbi
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v4
+              with:
+                  push: true
+                  tags: sifatulrabbi/sifatul-api:${{ env.VERSION }}
+
+            - name: Copy docker-compose.yml
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                  host: ${{ secrets.HOST }}
+                  port: 22
+                  key: ${{ secrets.SSH_SECRET_KEY }}
+                  username: root
+                  source: docker-compose.yml
+                  target: ~/apps/sifatul-api
+                  overwrite: true
+
+            - name: Run the app
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.HOST }}
+                  port: 22
+                  key: ${{ secrets.SSH_SECRET_KEY }}
+                  username: root
+                  script: |
+                      cd ~/apps/sifatul-api && \
+                      docker compose down && \
+                      docker compose up -d
+
+            - name: Copy sifatul.com.conf
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                  host: ${{ secrets.HOST }}
+                  port: 22
+                  key: ${{ secrets.SSH_SECRET_KEY }}
+                  username: root
+                  source: sifatul.com.conf
+                  target: /etc/nginx/conf.d
+                  overwrite: true
+
+            - name: Verify config and restart
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.HOST }}
+                  port: 22
+                  key: ${{ secrets.SSH_SECRET_KEY }}
+                  username: root
+                  script: |
+                      sudo nginx -t && \
+                      sudo systemctl restart nginx
