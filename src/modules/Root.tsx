@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import ThemeProvider from "@/modules/theme/ThemeProvider";
-import NavigationBar from "@/common/NavigationBar";
-import Footer from "@/common/Footer";
+import NavigationBar from "@/common/components/NavigationBar";
+import Footer from "@/common/components/Footer";
 import WeatherProvider from "@/modules/weather/WeatherProvider";
 
 const Root: React.FC = () => {

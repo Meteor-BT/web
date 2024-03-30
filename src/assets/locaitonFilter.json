@@ -1,0 +1,22 @@
+[
+    {
+        "name": "USA",
+        "cities": [
+            { "name": "New York" },
+            { "name": "Los Angeles" },
+            { "name": "Chicago" },
+            { "name": "Houston" },
+            { "name": "San Francisco" }
+        ]
+    },
+    {
+        "name": "Canada",
+        "cities": [
+            { "name": "Toronto" },
+            { "name": "Vancouver" },
+            { "name": "Montreal" },
+            { "name": "Calgary" },
+            { "name": "Ottawa" }
+        ]
+    }
+]

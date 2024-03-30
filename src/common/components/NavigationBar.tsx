@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BrandLogo from "@/common/BrandLogo";
+import BrandLogo from "@/common/components/BrandLogo";
 import { FaBars, FaGithub, FaX } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 

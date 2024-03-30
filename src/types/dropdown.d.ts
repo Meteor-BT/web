@@ -5,5 +5,5 @@ export type DropdownItem = {
     label: React.ReactNode;
     description?: React.ReactNode;
     items?: DropdownItem[];
-    onClick: (id: string) => void;
+    onClick?: (id: string) => void;
 };
