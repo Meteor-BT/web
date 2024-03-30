@@ -55,6 +55,6 @@ jobs:
                   key: ${{ secrets.SSH_SECRET_KEY }}
                   username: root
                   script: |
-                      cd ~/apps/sifatul-api && \
+                      cd ~/apps/meteor-bt-web && \
                       docker compose down && \
                       docker compose up -d
