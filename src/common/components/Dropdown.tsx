@@ -41,7 +41,11 @@ const Dropdown: React.FC<Props> = ({
                 onClick={() => setShow((p) => !p)}
             >
                 {label}
-                {expand && <span className="opacity-50">{selectedId}</span>}
+                {expand && (
+                    <span className="opacity-50">
+                        {selectedId || "Select one"}
+                    </span>
+                )}
                 <FaChevronDown
                     className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`}
                 />

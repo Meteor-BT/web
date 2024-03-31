@@ -27,6 +27,7 @@ const WeatherNavBar: React.FC = () => {
         if (country) {
             setCities(country.cities);
             setSelectedCity(country.cities[0].name);
+            setSelectedCity("");
         } else {
             setCities([]);
         }
