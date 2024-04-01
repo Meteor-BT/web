@@ -54,7 +54,7 @@ const WeatherTable: React.FC = () => {
                         {t}
                     </Button>
                 ))}
-                <Button variant="outline" size="sm" color="secondary">
+                <Button variant="text" size="sm" color="primary">
                     Choose
                 </Button>
             </div>
