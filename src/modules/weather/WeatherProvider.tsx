@@ -1,10 +1,11 @@
 import type { ActualWeatherInfo, ForecastWeatherInfo } from "@/types";
 import React, { useEffect, useState } from "react";
-import {
-    weatherContext,
+import type {
     WeatherTimeFilters,
     WeatherLocationFilters,
+    WeatherViewType,
 } from "@/modules/weather/weatherContext";
+import { weatherContext } from "@/modules/weather/weatherContext";
 import { http } from "@/utils";
 
 const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -30,6 +31,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     const [busy, setBusy] = useState(false);
     const [showForecasts, setShowForecasts] = useState(true);
+    const [viewType, setViewType] = useState<WeatherViewType>("daily");
 
     useEffect(() => {
         getPreciseLocation();
@@ -91,6 +93,8 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
                 locationFilters,
                 timeFilters,
                 busy,
+                viewType,
+                setViewType,
                 showForecasts,
                 setLocationFilters,
                 setTimeFilters,

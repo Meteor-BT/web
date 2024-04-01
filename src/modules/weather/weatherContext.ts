@@ -1,6 +1,8 @@
 import type { ForecastWeatherInfo, ActualWeatherInfo } from "@/types";
 import { createContext, useContext } from "react";
 
+export type WeatherViewType = "daily" | "monthly" | "weekly";
+
 export type WeatherTimeFilters = {
     hour: number;
     year: number;
@@ -21,6 +23,10 @@ export type WeatherContext = {
     timeFilters: WeatherTimeFilters;
     busy: boolean;
     showForecasts: boolean;
+    viewType: WeatherViewType;
+    setViewType: (
+        v: WeatherViewType | ((p: WeatherViewType) => WeatherViewType),
+    ) => void;
     setLocationFilters: (
         v:
             | WeatherLocationFilters
@@ -52,6 +58,8 @@ export const weatherContext = createContext<WeatherContext>({
     },
     showForecasts: true,
     busy: false,
+    viewType: "daily",
+    setViewType() {},
     setLocationFilters() {},
     setTimeFilters() {},
     setBusy() {},
