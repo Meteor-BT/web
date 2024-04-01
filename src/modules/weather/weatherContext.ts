@@ -11,7 +11,7 @@ export type WeatherLocationFilters = {
     city: string;
     country: string;
     long: number;
-    latt: number;
+    lati: number;
 };
 
 export type WeatherContext = {
@@ -21,10 +21,16 @@ export type WeatherContext = {
     timeFilters: WeatherTimeFilters;
     busy: boolean;
     showForecasts: boolean;
-    setLocationFilters: (v: WeatherLocationFilters) => void;
-    setTimeFilters: (v: WeatherTimeFilters) => void;
-    setBusy: (v: boolean) => void;
-    setShowForecasts: (v: boolean) => void;
+    setLocationFilters: (
+        v:
+            | WeatherLocationFilters
+            | ((p: WeatherLocationFilters) => WeatherLocationFilters),
+    ) => void;
+    setTimeFilters: (
+        v: WeatherTimeFilters | ((p: WeatherTimeFilters) => WeatherTimeFilters),
+    ) => void;
+    setBusy: (v: boolean | ((p: boolean) => boolean)) => void;
+    setShowForecasts: (v: boolean | ((p: boolean) => boolean)) => void;
     getForecastWeatherInfo: () => Promise<void>;
     getActualWeatherInfo: () => Promise<void>;
     getPreciseLocation: () => Promise<void>;
@@ -37,7 +43,7 @@ export const weatherContext = createContext<WeatherContext>({
         city: "",
         country: "",
         long: 0.0,
-        latt: 0.0,
+        lati: 0.0,
     },
     timeFilters: {
         hour: new Date().getHours(),
