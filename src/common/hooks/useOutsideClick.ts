@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 
-export default function useOutsideClick(
-    ref: React.RefObject<HTMLElement>,
-    cb: () => void,
-) {
+export default function useOutsideClick(ref: React.RefObject<HTMLElement>, cb: () => void) {
     useEffect(() => {
         window.addEventListener("click", detectClick);
         return () => window.removeEventListener("click", detectClick);

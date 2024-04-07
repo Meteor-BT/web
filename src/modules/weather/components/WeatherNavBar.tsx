@@ -22,9 +22,7 @@ const WeatherNavBar: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const country = locationList.find(
-            (c) => c.name === locationFilters.country,
-        );
+        const country = locationList.find((c) => c.name === locationFilters.country);
         if (country) {
             setCities(country.cities);
             setLocationFilters((p) => ({ ...p, city: "" }));
@@ -36,16 +34,10 @@ const WeatherNavBar: React.FC = () => {
     return (
         <nav className="fixed z-[1] top-[56px] left-0 right-0 h-[56px] bg-black border-b border-b-neutral-900 flex flex-row items-center justify-start p-root-container">
             <div className="flex flex-row gap-2 items-center justify-start">
-                <Button
-                    variant={showForecasts ? "solid" : "text"}
-                    onClick={() => setShowForecasts(true)}
-                >
+                <Button variant={showForecasts ? "solid" : "text"} onClick={() => setShowForecasts(true)}>
                     Forecasts
                 </Button>
-                <Button
-                    variant={!showForecasts ? "solid" : "text"}
-                    onClick={() => setShowForecasts(false)}
-                >
+                <Button variant={!showForecasts ? "solid" : "text"} onClick={() => setShowForecasts(false)}>
                     Actual data
                 </Button>
             </div>
@@ -58,8 +50,7 @@ const WeatherNavBar: React.FC = () => {
                     items={countries.map((c) => ({
                         label: c.name,
                         id: c.name,
-                        onClick: (id) =>
-                            setLocationFilters((p) => ({ ...p, country: id })),
+                        onClick: (id) => setLocationFilters((p) => ({ ...p, country: id })),
                     }))}
                 />
                 <Dropdown
@@ -69,16 +60,11 @@ const WeatherNavBar: React.FC = () => {
                     items={cities.map((c) => ({
                         label: c.name,
                         id: c.name,
-                        onClick: (id) =>
-                            setLocationFilters((p) => ({ ...p, city: id })),
+                        onClick: (id) => setLocationFilters((p) => ({ ...p, city: id })),
                     }))}
                 />
             </div>
-            <Button
-                variant="text"
-                className="md:hidden md:invisible ml-auto"
-                onClick={() => setShowFilterPanel((p) => !p)}
-            >
+            <Button variant="text" className="md:hidden md:invisible ml-auto" onClick={() => setShowFilterPanel((p) => !p)}>
                 {!showFilterPanel ? <FaChevronLeft /> : <FaX />}
                 Filters
             </Button>
@@ -94,8 +80,7 @@ const WeatherNavBar: React.FC = () => {
                     items={countries.map((c) => ({
                         label: c.name,
                         id: c.name,
-                        onClick: (id) =>
-                            setLocationFilters((p) => ({ ...p, country: id })),
+                        onClick: (id) => setLocationFilters((p) => ({ ...p, country: id })),
                     }))}
                 />
                 <Dropdown
@@ -105,8 +90,7 @@ const WeatherNavBar: React.FC = () => {
                     items={cities.map((c) => ({
                         label: c.name,
                         id: c.name,
-                        onClick: (id) =>
-                            setLocationFilters((p) => ({ ...p, city: id })),
+                        onClick: (id) => setLocationFilters((p) => ({ ...p, city: id })),
                     }))}
                 />
             </div>

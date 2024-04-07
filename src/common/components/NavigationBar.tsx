@@ -25,10 +25,7 @@ const NavigationBar: React.FC = () => {
         <nav
             className={`w-full flex flex-row items-center justify-start h-[56px] fixed top-0 right-0 left-0 bg-black p-root-container gap-4 border-b border-b-neutral-900 z-[100]`}
         >
-            <button
-                className="md:hidden md:invisible flex items-center justify-center text-neutral-400 text-lg"
-                onClick={() => setShow(!show)}
-            >
+            <button className="md:hidden md:invisible flex items-center justify-center text-neutral-400 text-lg" onClick={() => setShow(!show)}>
                 {show ? <FaX /> : <FaBars />}
             </button>
             <BrandLogo />
@@ -37,24 +34,13 @@ const NavigationBar: React.FC = () => {
                 ${show ? "flex absolute top-full right-0 p-4 p-root-container" : "hidden invisible"}`}
             >
                 {navLinks.map((l, idx) => (
-                    <NavLink
-                        key={idx.toString() + l}
-                        to={l.path}
-                        className={({ isActive }) =>
-                            `md:hover:text-neutral-400 ${isActive ? "text-neutral-100" : ""}`
-                        }
-                    >
+                    <NavLink key={idx.toString() + l} to={l.path} className={({ isActive }) => `md:hover:text-neutral-400 ${isActive ? "text-neutral-100" : ""}`}>
                         {l.name}
                     </NavLink>
                 ))}
             </div>
 
-            <a
-                href="https://github.com/Meteor-BT"
-                target="_blank"
-                rel="noreferrer"
-                className="text-xl ml-auto text-white"
-            >
+            <a href="https://github.com/Meteor-BT" target="_blank" rel="noreferrer" className="text-xl ml-auto text-white">
                 <FaGithub />
             </a>
         </nav>

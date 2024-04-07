@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { themeContext } from "@/modules/theme/themeContext";
 
-const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
-    children,
-}) => {
+const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [darkMode] = useState(true);
 
     useEffect(() => {
@@ -14,11 +12,7 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         }
     }, [darkMode]);
 
-    return (
-        <themeContext.Provider value={{ darkMode }}>
-            {children}
-        </themeContext.Provider>
-    );
+    return <themeContext.Provider value={{ darkMode }}>{children}</themeContext.Provider>;
 };
 
 export default ThemeProvider;

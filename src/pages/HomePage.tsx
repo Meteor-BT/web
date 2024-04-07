@@ -14,17 +14,9 @@ const HomePage: React.FC = () => {
                         <br className="md:hidden md:invisible" />
                         <span> all in one</span>
                     </h1>
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-                        Launching soon
-                    </h2>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">Launching soon</h2>
                 </div>
-                <video
-                    className="absolute z-[-1] top-0 right-0 bottom-0 left-0 overflow-hidden h-full w-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                >
+                <video className="absolute z-[-1] top-0 right-0 bottom-0 left-0 overflow-hidden h-full w-full object-cover" autoPlay loop muted playsInline>
                     <source src="/landing-page-bg-video.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
@@ -36,10 +28,7 @@ const HomePage: React.FC = () => {
                     <h2>Subscribe</h2>
                     <p>Sign up to be the first to get updates.</p>
                 </article>
-                <form
-                    onSubmit={subscribeUser}
-                    className="w-full flex flex-col md:flex-row items-center justify-center gap-4 max-w-[700px] mt-10"
-                >
+                <form onSubmit={subscribeUser} className="w-full flex flex-col md:flex-row items-center justify-center gap-4 max-w-[700px] mt-10">
                     <input
                         type="text"
                         required

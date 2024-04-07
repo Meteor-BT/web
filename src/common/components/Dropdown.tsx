@@ -14,13 +14,7 @@ type Props = {
     onHide?: () => void;
 };
 
-const Dropdown: React.FC<Props> = ({
-    label,
-    items,
-    selectedId,
-    buttonClass = "",
-    expand = false,
-}) => {
+const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "", expand = false }) => {
     const [show, setShow] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,32 +29,17 @@ const Dropdown: React.FC<Props> = ({
 
     return (
         <div ref={containerRef} className="flex relative">
-            <Button
-                variant="text"
-                className={"text-neutral-400 " + buttonClass}
-                onClick={() => setShow((p) => !p)}
-            >
+            <Button variant="text" className={"text-neutral-400 " + buttonClass} onClick={() => setShow((p) => !p)}>
                 {label}
-                {expand && (
-                    <span className="opacity-50">
-                        {selectedId || "Select one"}
-                    </span>
-                )}
-                <FaChevronDown
-                    className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`}
-                />
+                {expand && <span className="opacity-50">{selectedId || "Select one"}</span>}
+                <FaChevronDown className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`} />
             </Button>
             <div
                 className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity]
                     ${show ? "opacity-100 visible flex flex-col" : "opacity-0 invisible hidden pointer-events-none"}`}
             >
                 {items.map((item, idx) => (
-                    <Button
-                        key={idx.toString() + item.id}
-                        variant="text"
-                        className="w-full"
-                        onClick={() => onClick(item)}
-                    >
+                    <Button key={idx.toString() + item.id} variant="text" className="w-full" onClick={() => onClick(item)}>
                         {item.label}
                     </Button>
                 ))}
