@@ -4,6 +4,7 @@ import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType } from
 import { weatherContext } from "@/modules/weather/weatherContext";
 import { http } from "@/utils";
 import axios, { AxiosError } from "axios";
+import dayjs from "dayjs";
 
 const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [actualWeatherInfo, setActualWeatherInfo] = useState<ActualWeatherInfo[]>([]);
@@ -15,9 +16,8 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         lat: 0.0,
     });
     const [timeFilters, setTimeFilters] = useState<WeatherTimeFilters>({
-        hour: new Date().getHours(),
-        year: new Date().getFullYear(),
-        month: new Date().getMonth(),
+        from: new Date().toISOString(),
+        to: new Date().toISOString(),
     });
     const [busy, setBusy] = useState(false);
     const [showForecasts, setShowForecasts] = useState(true);
@@ -31,6 +31,25 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         getActualWeatherInfo();
     }, [locationFilters, timeFilters, viewType]);
 
+    useEffect(() => {
+        const t = {
+            from: new Date().toISOString(),
+            to: "",
+        };
+        switch (viewType) {
+            case "daily":
+                t.to = t.from;
+                break;
+            case "weekly":
+                t.to = dayjs(t.from).add(1, "week").toISOString();
+                break;
+            case "monthly":
+                t.to = dayjs(t.from).add(1, "month").toISOString();
+                break;
+        }
+        setTimeFilters(t);
+    }, [viewType]);
+
     async function getActualWeatherInfo() {
         if (!locationFilters.country || !locationFilters.city) {
             return;
@@ -39,11 +58,13 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             setBusy(true);
             const res = await http().get("weather/actuals", {
                 params: {
-                    ...locationFilters,
-                    type: viewType,
+                    country: locationFilters.country,
+                    city: locationFilters.city,
+                    from: timeFilters.from,
+                    to: timeFilters.to,
                 },
             });
-            setActualWeatherInfo(res.data.data);
+            setForecastWeatherInfo(res.data.data);
         } catch (err: any) {
             console.error(err?.response || err);
             setActualWeatherInfo([]);
@@ -53,14 +74,18 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     }
 
     async function getForecastWeatherInfo() {
-        if (new Date().getTime() > 10_000) return;
         if (!locationFilters.country || !locationFilters.city) {
             return;
         }
         try {
             setBusy(true);
             const res = await http().get("weather/forecasts", {
-                params: { ...locationFilters },
+                params: {
+                    country: locationFilters.country,
+                    city: locationFilters.city,
+                    from: timeFilters.from,
+                    to: timeFilters.to,
+                },
             });
             setForecastWeatherInfo(res.data.data);
         } catch (err: any) {

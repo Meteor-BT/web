@@ -1,12 +1,11 @@
 import type { ForecastWeatherInfo, ActualWeatherInfo } from "@/types";
 import { createContext, useContext } from "react";
 
-export type WeatherViewType = "daily" | "monthly" | "weekly";
+export type WeatherViewType = "daily" | "monthly" | "weekly" | "custom";
 
 export type WeatherTimeFilters = {
-    hour: number;
-    year: number;
-    month: number;
+    from: string;
+    to: string;
 };
 
 export type WeatherLocationFilters = {
@@ -44,9 +43,8 @@ export const weatherContext = createContext<WeatherContext>({
         lat: 0.0,
     },
     timeFilters: {
-        hour: new Date().getHours(),
-        year: new Date().getFullYear(),
-        month: new Date().getMonth(),
+        from: new Date().toISOString(),
+        to: new Date().toISOString(),
     },
     showForecasts: true,
     busy: false,

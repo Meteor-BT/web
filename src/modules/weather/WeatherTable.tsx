@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Button from "@/common/components/Button";
 import { WeatherViewType, useWeather } from "@/modules/weather/weatherContext";
 import dayjs from "dayjs";
@@ -12,41 +12,43 @@ const Td: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const WeatherTable: React.FC = () => {
-    const { actualWeatherInfo, showForecasts, viewType, getActualWeatherInfo, setViewType, busy } = useWeather();
-
-    useEffect(() => {
-        getActualWeatherInfo();
-    }, []);
+    const { actualWeatherInfo, showForecasts, viewType, setViewType, busy, timeFilters } = useWeather();
 
     return (
         <div className="w-full min-h-max py-6 flex flex-col gap-8">
             <div className="flex flex-row gap-4 items-center justify-start">
-                {["Daily", "Weekly", "Monthly"].map((t) => (
-                    <Button key={t} size="sm" variant={viewType === t.toLowerCase() ? "solid" : "text"} onClick={() => setViewType(t.toLowerCase() as WeatherViewType)}>
-                        {t}
+                {["Daily", "Weekly", "Monthly", "Custom"].map((t) => (
+                    <Button
+                        key={t}
+                        size="sm"
+                        variant={viewType === t.toLowerCase() ? "solid" : "text"}
+                        color={t === "Custom" ? "primary" : "normal"}
+                        onClick={() => setViewType(t.toLowerCase() as WeatherViewType)}
+                    >
+                        {t === "Custom" ? "Choose" : t}
                     </Button>
                 ))}
-                <Button variant="text" size="sm" color="primary">
-                    Choose
-                </Button>
             </div>
             <div className="w-full flex flex-col">
                 <h3 className="text-xl text-neutral-200">
                     Weather {showForecasts ? "forecasts" : "info"}{" "}
-                    {viewType === "daily" && (
+                    {dayjs(timeFilters.from).isSame(timeFilters.to, "day") && (
                         <>
                             of <span className="text-teal-500">{new Date().toDateString()}</span>
                         </>
                     )}
-                    {viewType !== "daily" && (
+                    {!dayjs(timeFilters.from).isSame(timeFilters.to, "day") && (
                         <>
-                            from <span className="text-teal-500">{dayjs(Date.now()).format("MMM DD YYYY")}</span>
+                            from{" "}
+                            <button disabled={viewType !== "custom"} className="text-teal-500">
+                                {dayjs(Date.now()).format("MMM DD YYYY")}
+                            </button>
                             {" to "}
-                            <span className="text-teal-500">
+                            <button disabled={viewType !== "custom"} className="text-teal-500">
                                 {dayjs(Date.now())
                                     .add(viewType === "weekly" ? 7 : 30, "day")
                                     .format("MMM DD YYYY")}
-                            </span>
+                            </button>
                         </>
                     )}
                 </h3>

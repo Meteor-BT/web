@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { http } from "@/utils";
 
 const HomePage: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+
     async function subscribeUser(e: React.SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();
+        try {
+            setLoading(true);
+            await http().post("/users/join-waitlist", { email });
+            setEmail("");
+        } catch (err: any) {
+            console.error(err?.response?.data || err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -30,16 +43,20 @@ const HomePage: React.FC = () => {
                 </article>
                 <form onSubmit={subscribeUser} className="w-full flex flex-col md:flex-row items-center justify-center gap-4 max-w-[700px] mt-10">
                     <input
-                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.currentTarget.value)}
+                        disabled={loading}
+                        type="email"
                         required
                         placeholder="Enter your email"
                         className="w-full bg-transparent text-base text-white px-4 py-3 rounded border-2 border-neutral-500"
                     />
                     <button
+                        disabled={loading}
                         type="submit"
                         className="px-6 py-3 text-base uppercase tracking-wider bg-white text-black rounded font-bold flex justify-center items-center min-w-max w-full md:w-auto lg:hover:bg-neutral-200 transition-colors border-2 border-white lg:hover:border-neutral-200"
                     >
-                        Sign up
+                        {loading ? <div className="animate-spin h-6 w-6 border-4 border-neutral-300 rounded-full border-t-teal-500"></div> : "Sign up"}
                     </button>
                 </form>
             </section>
