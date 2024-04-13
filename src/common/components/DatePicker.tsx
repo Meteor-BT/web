@@ -4,7 +4,7 @@ type Props = {
     label: string;
 };
 
-const DatePicker: React.FC<Props> = ({ label }) => {
+const DatePicker: React.FC<Props> = ({}) => {
     return <div className=""></div>;
 };
 

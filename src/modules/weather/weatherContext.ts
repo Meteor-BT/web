@@ -55,8 +55,7 @@ export const weatherContext = createContext<WeatherContext>({
     setTimeFilters() {},
     setBusy() {},
     setShowForecasts() {},
-    async getForecastWeatherInfo() {},
-    async getActualWeatherInfo() {},
+    async getWeatherInfo() {},
     async getPreciseLocation() {},
 });
 
