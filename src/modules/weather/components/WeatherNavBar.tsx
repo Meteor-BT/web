@@ -59,8 +59,8 @@ const WeatherNavBar: React.FC = () => {
                     selectedId={locationFilters.city}
                     label="Country"
                     items={countries.map((c) => ({
-                        label: c.name,
-                        id: c.name,
+                        label: c,
+                        id: c,
                         onClick: (id) => setLocationFilters((p) => ({ ...p, country: id })),
                     }))}
                 />
