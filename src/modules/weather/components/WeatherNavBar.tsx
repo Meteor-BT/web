@@ -18,7 +18,6 @@ const WeatherNavBar: React.FC = () => {
 
     useEffect(() => {
         setCountries(locationList);
-        setLocationFilters((p) => ({ ...p, country: locationList[0].name }));
     }, []);
 
     useEffect(() => {
@@ -50,7 +49,7 @@ const WeatherNavBar: React.FC = () => {
                     items={countries.map((c) => ({
                         label: c.name,
                         id: c.name,
-                        onClick: (id) => setLocationFilters((p) => ({ ...p, country: id })),
+                        onClick: (id) => setLocationFilters((p) => ({ ...p, country: id, city: "" })),
                     }))}
                 />
                 <Dropdown

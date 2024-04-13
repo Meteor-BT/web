@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@/common/components/Button";
 import { WeatherViewType, useWeather } from "@/modules/weather/weatherContext";
 import dayjs from "dayjs";
+import { v4 } from "uuid";
 
 const tableHeaders: string[] = ["Temperature", "Feels like", "Min/Max", "Wind speed", "Humidity", "Precepitation", "Pressure"];
 
@@ -12,7 +13,7 @@ const Td: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const WeatherTable: React.FC = () => {
-    const { actualWeatherInfo, showForecasts, viewType, setViewType, busy, timeFilters } = useWeather();
+    const { actualWeatherInfo, forecastWeatherInfo, showForecasts, viewType, setViewType, busy, timeFilters } = useWeather();
 
     return (
         <div className="w-full min-h-max py-6 flex flex-col gap-8">
@@ -71,8 +72,8 @@ const WeatherTable: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {actualWeatherInfo.map((info) => (
-                            <tr key={info.id} className="odd:bg-neutral-900 text-left border-neutral-900 odd:border-black text-neutral-200">
+                        {(showForecasts ? forecastWeatherInfo : actualWeatherInfo).map((info) => (
+                            <tr key={v4() + info.date} className="odd:bg-neutral-900 text-left border-neutral-900 odd:border-black text-neutral-200">
                                 <Td>
                                     {viewType === "daily" && dayjs(info.date).format("hh:mm a")}
                                     {viewType === "weekly" && dayjs(info.date).format("ddd")}

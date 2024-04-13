@@ -1,4 +1,4 @@
-import type { ActualWeatherInfo, ForecastWeatherInfo } from "@/types";
+import type { WeatherInfo } from "@/types";
 import React, { useEffect, useState } from "react";
 import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType } from "@/modules/weather/weatherContext";
 import { weatherContext } from "@/modules/weather/weatherContext";
@@ -7,8 +7,9 @@ import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [actualWeatherInfo, setActualWeatherInfo] = useState<ActualWeatherInfo[]>([]);
-    const [forecastWeatherInfo, setForecastWeatherInfo] = useState<ForecastWeatherInfo[]>([]);
+    const [weatherInfo, setWeatherInfo] = useState<WeatherInfo[]>([]);
+    const [actualWeatherInfo, setActualWeatherInfo] = useState<WeatherInfo[]>([]);
+    const [forecastWeatherInfo, setForecastWeatherInfo] = useState<WeatherInfo[]>([]);
     const [locationFilters, setLocationFilters] = useState<WeatherLocationFilters>({
         city: "",
         country: "",
@@ -28,7 +29,28 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     }, []);
 
     useEffect(() => {
-        getActualWeatherInfo();
+        const forecastList: WeatherInfo[] = [];
+        const actualList: WeatherInfo[] = [];
+        for (let i = 0; i < weatherInfo.length; i++) {
+            const w = weatherInfo[i];
+            if (w.forecast) {
+                forecastList.push(w);
+            } else {
+                actualList.push(w);
+            }
+        }
+        setActualWeatherInfo(actualList);
+        setForecastWeatherInfo(forecastList);
+    }, [weatherInfo]);
+
+    useEffect(() => {
+        if (weatherInfo.length < 1) {
+            getWeatherInfo();
+        }
+    }, [showForecasts]);
+
+    useEffect(() => {
+        getWeatherInfo();
     }, [locationFilters, timeFilters, viewType]);
 
     useEffect(() => {
@@ -50,13 +72,13 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         setTimeFilters(t);
     }, [viewType]);
 
-    async function getActualWeatherInfo() {
+    async function getWeatherInfo() {
         if (!locationFilters.country || !locationFilters.city) {
             return;
         }
         try {
             setBusy(true);
-            const res = await http().get("weather/actuals", {
+            const res = await http().get("weather/combined", {
                 params: {
                     country: locationFilters.country,
                     city: locationFilters.city,
@@ -64,33 +86,10 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                     to: timeFilters.to,
                 },
             });
-            setForecastWeatherInfo(res.data.data);
+            setWeatherInfo(res.data.data);
         } catch (err: any) {
             console.error(err?.response || err);
-            setActualWeatherInfo([]);
-        } finally {
-            setBusy(false);
-        }
-    }
-
-    async function getForecastWeatherInfo() {
-        if (!locationFilters.country || !locationFilters.city) {
-            return;
-        }
-        try {
-            setBusy(true);
-            const res = await http().get("weather/forecasts", {
-                params: {
-                    country: locationFilters.country,
-                    city: locationFilters.city,
-                    from: timeFilters.from,
-                    to: timeFilters.to,
-                },
-            });
-            setForecastWeatherInfo(res.data.data);
-        } catch (err: any) {
-            console.error(err?.response || err);
-            setForecastWeatherInfo([]);
+            setWeatherInfo([]);
         } finally {
             setBusy(false);
         }
@@ -136,6 +135,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     return (
         <weatherContext.Provider
             value={{
+                weatherInfo,
                 actualWeatherInfo,
                 forecastWeatherInfo,
                 locationFilters,
@@ -148,8 +148,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 setTimeFilters,
                 setBusy,
                 setShowForecasts,
-                getActualWeatherInfo,
-                getForecastWeatherInfo,
+                getWeatherInfo,
                 getPreciseLocation,
             }}
         >
