@@ -1,34 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useWeather } from "@/modules/weather/weatherContext";
 import Button from "@/common/components/Button";
 import Dropdown from "@/common/components/Dropdown";
-import locationList from "@/assets/locaitonFilter.json";
 import { FaChevronLeft, FaX } from "react-icons/fa6";
-
-type LocFilter = {
-    name: string;
-};
+import useCitiesInfo from "@/common/hooks/useCitiesInfo";
 
 const WeatherNavBar: React.FC = () => {
     const { showForecasts, setShowForecasts } = useWeather();
-    const [countries, setCountries] = useState<LocFilter[]>([]);
-    const [cities, setCities] = useState<LocFilter[]>([]);
     const [showFilterPanel, setShowFilterPanel] = useState(false);
     const { locationFilters, setLocationFilters } = useWeather();
 
-    useEffect(() => {
-        setCountries(locationList);
-    }, []);
-
-    useEffect(() => {
-        const country = locationList.find((c) => c.name === locationFilters.country);
-        if (country) {
-            setCities(country.cities);
-            setLocationFilters((p) => ({ ...p, city: "" }));
-        } else {
-            setCities([]);
-        }
-    }, [locationFilters.country]);
+    const { countries, cities } = useCitiesInfo(locationFilters.country);
 
     return (
         <nav className="fixed z-[1] top-[56px] left-0 right-0 h-[56px] bg-black border-b border-b-neutral-900 flex flex-row items-center justify-start p-root-container">
@@ -47,8 +29,8 @@ const WeatherNavBar: React.FC = () => {
                     selectedId={locationFilters.country}
                     label="Country"
                     items={countries.map((c) => ({
-                        label: c.name,
-                        id: c.name,
+                        label: c,
+                        id: c,
                         onClick: (id) => setLocationFilters((p) => ({ ...p, country: id, city: "" })),
                     }))}
                 />

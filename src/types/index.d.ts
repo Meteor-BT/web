@@ -11,4 +11,11 @@ export type WeatherInfo = {
     forecast: boolean;
 };
 
+export type CityInfo = {
+    name: string;
+    lon: number;
+    lat: number;
+    country: string;
+};
+
 export * from "./dropdown";

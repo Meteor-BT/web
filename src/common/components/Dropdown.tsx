@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { DropdownItem } from "@/types";
 import Button from "@/common/components/Button";
@@ -16,11 +16,18 @@ type Props = {
 
 const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "", expand = false }) => {
     const [show, setShow] = useState(false);
+    const [maxHeight, setMaxHeight] = useState(200);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useOutsideClick(containerRef, () => {
         setShow(false);
     });
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const low = containerRef.current.getBoundingClientRect().bottom;
+        setMaxHeight(window.innerHeight - low - 32);
+    }, [containerRef.current]);
 
     function onClick(item: DropdownItem) {
         item.onClick && item.onClick(item.id);
@@ -35,11 +42,12 @@ const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "",
                 <FaChevronDown className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`} />
             </Button>
             <div
-                className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity]
+                className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity] overflow-y-auto
                     ${show ? "opacity-100 visible flex flex-col" : "opacity-0 invisible hidden pointer-events-none"}`}
+                style={{ maxHeight: maxHeight.toString() + "px" }}
             >
                 {items.map((item, idx) => (
-                    <Button key={idx.toString() + item.id} variant="text" className="w-full" onClick={() => onClick(item)}>
+                    <Button key={idx.toString() + item.id} variant="text" className="w-full" style={{ justifyContent: "flex-start" }} onClick={() => onClick(item)}>
                         {item.label}
                     </Button>
                 ))}
