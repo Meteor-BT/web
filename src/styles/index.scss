@@ -35,3 +35,28 @@ body {
 .hero-linear-bg {
     background: linear-gradient(180deg, #000000 0%, transparent 50%, #000000 100%);
 }
+
+.alert-container {
+    @apply p-4 rounded-lg bg-neutral-900 flex flex-col justify-start items-start prose prose-invert prose-sm max-w-[300px] prose-h5:my-0 prose-p:my-0 prose-h5:text-neutral-200 prose-p:text-neutral-400;
+    animation-name: in;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+
+    @keyframes in {
+        from {
+            transform: translateX(120%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes out {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(120%);
+        }
+    }
+}
