@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { http } from "@/utils";
+import useHttp from "@/common/hooks/useHttp";
 
 const HomePage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const { http } = useHttp();
 
     async function subscribeUser(e: React.SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();

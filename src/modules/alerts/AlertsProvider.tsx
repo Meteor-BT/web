@@ -1,22 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { alertsContext, AlertItem } from "./alertsContext";
 import { v4 } from "uuid";
 
-const mockAlerts = [
-    { title: "Hello world", body: "Alert body text goes here." },
-    { title: "Hello world", body: "Alert body text goes here. Alert body text goes here. Alert body text goes here." },
-];
-
 const AlertsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const container = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        mockAlerts.forEach((a) => {
-            setTimeout(() => newAlert(a), 1000);
-        });
-
-        clearAlerts();
-    }, []);
 
     function newAlert(a: Omit<AlertItem, "id">) {
         const alertItem: AlertItem = {

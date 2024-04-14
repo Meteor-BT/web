@@ -1,7 +1,7 @@
 import type { CityInfo } from "@/types";
 import { useEffect, useState } from "react";
-import { http } from "@/utils";
 import dayjs from "dayjs";
+import useHttp from "@/common/hooks/useHttp";
 
 const CITIES_CACHE_KEY = "meteorbt.citiesinfo_cache";
 
@@ -9,6 +9,7 @@ export default function useCitiesInfo(selectedCountry: string) {
     const [countries, setCountries] = useState<string[]>([]);
     const [cities, setCities] = useState<CityInfo[]>([]);
     const [gettingCitiesInfo, setGettingCitiesInfo] = useState(false);
+    const { http } = useHttp();
 
     useEffect(() => {
         getInfo();

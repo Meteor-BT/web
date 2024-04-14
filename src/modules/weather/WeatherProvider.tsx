@@ -2,7 +2,7 @@ import type { WeatherInfo } from "@/types";
 import React, { useEffect, useState } from "react";
 import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType } from "@/modules/weather/weatherContext";
 import { weatherContext } from "@/modules/weather/weatherContext";
-import { http } from "@/utils";
+import useHttp from "@/common/hooks/useHttp";
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
 
@@ -23,6 +23,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [busy, setBusy] = useState(false);
     const [showForecasts, setShowForecasts] = useState(true);
     const [viewType, setViewType] = useState<WeatherViewType>("daily");
+    const { http } = useHttp();
 
     useEffect(() => {
         getPreciseLocation();
