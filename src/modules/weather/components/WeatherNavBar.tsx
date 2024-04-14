@@ -7,10 +7,9 @@ import useCitiesInfo from "@/common/hooks/useCitiesInfo";
 import dayjs from "dayjs";
 
 const WeatherNavBar: React.FC = () => {
-    const { showForecasts, setShowForecasts, viewType, setViewType, timeFilters } = useWeather();
     const [showFilterPanel, setShowFilterPanel] = useState(false);
-    const { locationFilters, setLocationFilters } = useWeather();
 
+    const { showForecasts, viewType, setViewType, timeFilters, locationFilters, setLocationFilters, setShowForecasts } = useWeather();
     const { countries, cities } = useCitiesInfo(locationFilters.country);
 
     return (
@@ -25,7 +24,17 @@ const WeatherNavBar: React.FC = () => {
                     </Button>
                 </div>
 
-                <div className="w-full hidden invisible md:visible md:flex justify-end items-center gap-4">
+                <div className="w-full invisible hidden md:visible md:flex justify-end items-center gap-4">
+                    <Dropdown
+                        expand
+                        selectedId={viewType}
+                        label="Results type"
+                        items={["Daily", "Weekly", "Monthly" /*"Custom"*/].map((t) => ({
+                            label: t,
+                            id: t,
+                            onClick: () => setViewType(t as WeatherViewType),
+                        }))}
+                    />
                     <Dropdown
                         expand
                         selectedId={locationFilters.country}
@@ -47,15 +56,25 @@ const WeatherNavBar: React.FC = () => {
                         }))}
                     />
                 </div>
+
                 <Button variant="text" className="md:hidden md:invisible ml-auto" onClick={() => setShowFilterPanel((p) => !p)}>
                     {!showFilterPanel ? <FaChevronLeft /> : <FaX />}
                     Filters
                 </Button>
-
                 <div
-                    className={`min-w-max md:hidden md:invisible visible flex flex-col justify-start items-start gap-4 fixed top-[112px] right-0 bottom-0 bg-neutral-900 p-6 transition-transform
+                    className={`min-w-max md:hidden md:invisible visible flex flex-col justify-start items-start gap-4 fixed top-[112px] right-0 bottom-0 bg-neutral-950 p-6 transition-transform
                 ${showFilterPanel ? "" : "translate-x-[120%]"}`}
                 >
+                    <Dropdown
+                        expand
+                        selectedId={viewType}
+                        label="Results type"
+                        items={["Daily", "Weekly", "Monthly" /*"Custom"*/].map((t) => ({
+                            label: t,
+                            id: t,
+                            onClick: () => setViewType(t.toLowerCase() as WeatherViewType),
+                        }))}
+                    />
                     <Dropdown
                         expand
                         selectedId={locationFilters.city}
@@ -80,20 +99,6 @@ const WeatherNavBar: React.FC = () => {
             </nav>
 
             <div className="w-full min-h-max py-6 flex flex-col gap-8">
-                <div className="flex flex-row gap-4 items-center justify-start">
-                    {["Daily", "Weekly", "Monthly", "Custom"].map((t) => (
-                        <Button
-                            key={t}
-                            size="sm"
-                            variant={viewType === t.toLowerCase() ? "solid" : "text"}
-                            color={t === "Custom" ? "primary" : "normal"}
-                            onClick={() => setViewType(t.toLowerCase() as WeatherViewType)}
-                        >
-                            {t === "Custom" ? "Choose" : t}
-                        </Button>
-                    ))}
-                </div>
-
                 <div className="w-full flex flex-col">
                     <h3 className="text-xl text-neutral-200">
                         Weather {showForecasts ? "forecasts" : "info"}{" "}

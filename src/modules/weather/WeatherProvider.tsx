@@ -59,7 +59,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             from: new Date().toISOString(),
             to: "",
         };
-        switch (viewType) {
+        switch (viewType.toLowerCase()) {
             case "daily":
                 t.to = t.from;
                 break;

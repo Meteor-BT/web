@@ -27,7 +27,7 @@ const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "",
         if (!containerRef.current) return;
         const low = containerRef.current.getBoundingClientRect().bottom;
         setMaxHeight(window.innerHeight - low - 32);
-    }, [containerRef.current]);
+    }, [containerRef.current, show]);
 
     function onClick(item: DropdownItem) {
         item.onClick && item.onClick(item.id);
@@ -42,7 +42,7 @@ const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "",
                 <FaChevronDown className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`} />
             </Button>
             <div
-                className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-950 p-4 transition-[transform,opacity] overflow-y-auto
+                className={`z-[1] absolute top-[120%] right-0 min-w-max rounded-lg border border-neutral-800 bg-neutral-900 p-4 transition-[transform,opacity] overflow-y-auto
                     ${show ? "opacity-100 visible flex flex-col" : "opacity-0 invisible hidden pointer-events-none"}`}
                 style={{ maxHeight: maxHeight.toString() + "px" }}
             >

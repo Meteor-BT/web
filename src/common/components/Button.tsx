@@ -20,7 +20,7 @@ ${props.size === "base" || !props.size ? "px-4 py-2 rounded-lg gap-2 text-sm" : 
 ${props.color === "primary" ? "text-teal-500 stroke-teal-500 lg:hover:bg-teal-500/10" : ""}
 ${props.color === "secondary" ? "text-orange-500 stroke-orange-500 lg:hover:bg-orange-500/10" : ""}
 ${props.color === "invert" ? "text-neutral-900 stroke-neutral-900" : ""}
-${props.color === "normal" || !props.color ? "text-white stroke-white lg:hover:bg-neutral-900" : ""}
+${props.color === "normal" || !props.color ? "text-white stroke-white lg:hover:bg-teal-500/10" : ""}
 ${props.className || ""}`}
             >
                 {props.children}
