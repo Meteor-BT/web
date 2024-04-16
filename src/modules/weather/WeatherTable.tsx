@@ -3,7 +3,7 @@ import { useWeather } from "@/modules/weather/weatherContext";
 import dayjs from "dayjs";
 import { v4 } from "uuid";
 
-const tableHeaders: string[] = ["Temperature", "Feels like", "Min/Max", "Wind speed", "Humidity", "Precepitation", "Pressure"];
+const tableHeaders: string[] = ["Temperature", "Humidity", "Wind speed", "Precepitation"];
 
 const Td: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <td className="p-4 border-r last:border-none" style={{ borderColor: "inherit" }}>
@@ -41,23 +41,12 @@ const WeatherTable: React.FC = () => {
                                     {viewType === "monthly" && dayjs(info.date).format("MMM DD YYYY")}
                                 </Td>
                                 <Td>{info.temperature_2m}&deg; C</Td>
-                                <Td>
-                                    {(info.temperature_2m * 1.05).toFixed(0)}
-                                    &deg; C
-                                </Td>
-                                <Td>
-                                    {(info.temperature_2m * 0.9).toFixed(0)}
-                                    &deg;/
-                                    {(info.temperature_2m * 1.1).toFixed(0)}
-                                    &deg; C
-                                </Td>
-                                <Td>{info.windspeed_10m} mi</Td>
                                 <Td>{info.relativehumidity_2m} %</Td>
+                                <Td>{info.windspeed_10m} mi</Td>
                                 <Td>
                                     {(100 - (info.windspeed_10m / info.relativehumidity_2m) * 100).toFixed(0)}
                                     {" %"}
                                 </Td>
-                                <Td>{info.pressure_msl} mmHg</Td>
                             </tr>
                         ))}
                     </tbody>
