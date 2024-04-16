@@ -3,6 +3,8 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { useWeather } from "@/modules/weather/weatherContext";
 import dayjs from "dayjs";
 import { colors, windowSize } from "@/constants";
+import { startCase } from "lodash";
+import CustomTooltip from "@/modules/weather/components/CustomTooltip";
 
 type ComparableData = {
     date: Date;
@@ -107,15 +109,22 @@ const WeatherCompareChart: React.FC = () => {
         }
     }
 
+    const xAxisTickFormatter = (_: any, index: number) => {
+        return dayjs(data[index].date).format("DD");
+    };
+    function yAxisTickFormatter(v: any, _: number) {
+        return `${v}° C`;
+    }
+
     return (
         <div className="w-full flex flex-col">
             <LineChart width={width} height={height} data={data}>
                 <Line type="monotone" dataKey="actualTemp" stroke={colors.secondary} />
                 <Line type="monotone" dataKey="forecastTemp" stroke={colors.primary} />
-                <XAxis />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+                <XAxis dataKey="date" tickCount={data.length} tickFormatter={xAxisTickFormatter} />
+                <YAxis tickFormatter={yAxisTickFormatter} />
+                <Tooltip content={CustomTooltip} />
+                <Legend formatter={(v) => startCase(v)} />
             </LineChart>
         </div>
     );
