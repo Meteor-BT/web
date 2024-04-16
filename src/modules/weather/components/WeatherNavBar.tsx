@@ -5,6 +5,7 @@ import Dropdown from "@/common/components/Dropdown";
 import { FaChevronLeft, FaX } from "react-icons/fa6";
 import useCitiesInfo from "@/common/hooks/useCitiesInfo";
 import dayjs from "dayjs";
+import { startCase } from "lodash";
 
 const WeatherNavBar: React.FC = () => {
     const [showFilterPanel, setShowFilterPanel] = useState(false);
@@ -29,8 +30,8 @@ const WeatherNavBar: React.FC = () => {
                         expand
                         selectedId={viewType}
                         label="Results type"
-                        items={["Daily", "Weekly", "Monthly" /*"Custom"*/].map((t) => ({
-                            label: t,
+                        items={["daily", "weekly", "monthly" /*"custom"*/].map((t) => ({
+                            label: startCase(t),
                             id: t,
                             onClick: () => setViewType(t as WeatherViewType),
                         }))}

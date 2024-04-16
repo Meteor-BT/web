@@ -8,10 +8,10 @@ import CustomTooltip from "@/modules/weather/components/CustomTooltip";
 
 type ComparableData = {
     date: Date;
-    actualTemp?: number;
-    forecastTemp?: number;
-    actualHumidity?: number;
-    forecastHumidity?: number;
+    actualTemp: number | null;
+    forecastTemp: number | null;
+    actualHumidity: number | null;
+    forecastHumidity: number | null;
 };
 
 const WeatherCompareChart: React.FC = () => {
@@ -37,64 +37,27 @@ const WeatherCompareChart: React.FC = () => {
         for (let i = 0; i < weatherInfo.length; ++i) {
             const w = weatherInfo[i];
             const recordKey = dayjs(w.date).format("DD-MM-YYYY-HH");
+            if (!cd[recordKey]) {
+                cd[recordKey] = {
+                    date: w.date,
+                    forecastTemp: w.temperature_2m,
+                    actualTemp: w.temperature_2m,
+                    forecastHumidity: w.relativehumidity_2m,
+                    actualHumidity: w.relativehumidity_2m,
+                };
+            }
             if (w.forecast) {
-                if (cd[recordKey]) {
-                    cd[recordKey].forecastTemp = w.temperature_2m;
-                    cd[recordKey].forecastHumidity = w.relativehumidity_2m;
-                } else {
-                    cd[recordKey] = {
-                        date: w.date,
-                        forecastTemp: w.temperature_2m,
-                    };
-                }
+                cd[recordKey].forecastTemp = w.temperature_2m;
+                cd[recordKey].forecastHumidity = w.relativehumidity_2m;
             } else {
-                if (cd[recordKey]) {
-                    cd[recordKey].actualTemp = w.temperature_2m;
-                } else {
-                    cd[recordKey] = {
-                        date: w.date,
-                        actualTemp: w.temperature_2m,
-                    };
-                }
+                cd[recordKey].actualTemp = w.temperature_2m;
+                cd[recordKey].actualHumidity = w.relativehumidity_2m;
             }
         }
         const sortedData = Object.values(cd).sort((a, b) => {
             if (dayjs(a.date).isBefore(b.date, "h")) return -1;
             return 1;
         });
-        for (let i = 0; i < sortedData.length; ++i) {
-            const current = sortedData[i];
-            if (current.forecastTemp !== undefined && current.actualTemp !== undefined) {
-                continue;
-            }
-            let alt = null;
-            for (let j = i; j > -1; --j) {
-                const p = sortedData[j];
-                if ((!current.forecastTemp && !p.forecastTemp) || (!current.actualTemp && !p.actualTemp)) {
-                    continue;
-                }
-                alt = p;
-                break;
-            }
-            if (!alt) {
-                for (let j = i; j < sortedData.length; ++j) {
-                    const n = sortedData[j];
-                    if ((!current.forecastTemp && !n.forecastTemp) || (!current.actualTemp && !n.actualTemp)) {
-                        continue;
-                    }
-                    alt = n;
-                    break;
-                }
-            }
-            if (alt) {
-                if (!current.forecastTemp) {
-                    current.forecastTemp = alt.forecastTemp;
-                }
-                if (!current.actualTemp) {
-                    current.actualTemp = alt.actualTemp;
-                }
-            }
-        }
         setData(sortedData);
     }
 
@@ -109,8 +72,8 @@ const WeatherCompareChart: React.FC = () => {
         }
     }
 
-    const xAxisTickFormatter = (_: any, index: number) => {
-        return dayjs(data[index].date).format("DD");
+    const xAxisTickFormatter = (value: any, _: number) => {
+        return dayjs(value).format("MMM DD");
     };
     function yAxisTickFormatter(v: any, _: number) {
         return `${v}° C`;
@@ -119,10 +82,10 @@ const WeatherCompareChart: React.FC = () => {
     return (
         <div className="w-full flex flex-col">
             <LineChart width={width} height={height} data={data}>
-                <Line type="monotone" dataKey="actualTemp" stroke={colors.secondary} />
-                <Line type="monotone" dataKey="forecastTemp" stroke={colors.primary} />
-                <XAxis dataKey="date" tickCount={data.length} tickFormatter={xAxisTickFormatter} />
-                <YAxis tickFormatter={yAxisTickFormatter} />
+                <Line connectNulls type="monotone" dataKey="actualTemp" stroke={colors.secondary} />
+                <Line connectNulls type="monotone" dataKey="forecastTemp" stroke={colors.primary} />
+                <YAxis tickFormatter={yAxisTickFormatter} style={{ fontSize: "12px" }} />
+                <XAxis dataKey="date" tickFormatter={xAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <Tooltip content={CustomTooltip} />
                 <Legend formatter={(v) => startCase(v)} />
             </LineChart>

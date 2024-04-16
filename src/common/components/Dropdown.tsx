@@ -3,6 +3,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { DropdownItem } from "@/types";
 import Button from "@/common/components/Button";
 import useOutsideClick from "@/common/hooks/useOutsideClick";
+import { startCase } from "lodash";
 
 type Props = {
     label: React.ReactNode;
@@ -38,7 +39,7 @@ const Dropdown: React.FC<Props> = ({ label, items, selectedId, buttonClass = "",
         <div ref={containerRef} className="flex relative">
             <Button variant="text" className={"text-neutral-400 " + buttonClass} onClick={() => setShow((p) => !p)}>
                 {label}
-                {expand && <span className="opacity-50">{selectedId || "Select one"}</span>}
+                {expand && <span className="opacity-50">{startCase(selectedId) || "Select one"}</span>}
                 <FaChevronDown className={`text-xs transition-[colors,transform] ${show ? "rotate-180" : ""}`} />
             </Button>
             <div
