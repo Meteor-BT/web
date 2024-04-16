@@ -34,31 +34,39 @@ const WeatherCompareChart: React.FC = () => {
 
     function prepareChartData() {
         const cd: Record<string, ComparableData> = {};
-        for (let i = 0; i < weatherInfo.length; ++i) {
-            const w = weatherInfo[i];
+        const sortedWeatherInfo = weatherInfo.sort((a, b) => {
+            if (dayjs(a.date).isBefore(b.date, "h")) return -1;
+            return 1;
+        });
+        for (let i = 0; i < sortedWeatherInfo.length; ++i) {
+            const w = sortedWeatherInfo[i];
             const recordKey = dayjs(w.date).format("DD-MM-YYYY-HH");
             if (!cd[recordKey]) {
                 cd[recordKey] = {
                     date: w.date,
-                    forecastTemp: w.temperature_2m,
-                    actualTemp: w.temperature_2m,
-                    forecastHumidity: w.relativehumidity_2m,
-                    actualHumidity: w.relativehumidity_2m,
+                    forecastTemp: i === 0 ? w.temperature_2m : null,
+                    actualTemp: i === 0 ? w.temperature_2m : null,
+                    forecastHumidity: i === 0 ? w.relativehumidity_2m : null,
+                    actualHumidity: i === 0 ? w.relativehumidity_2m : null,
                 };
             }
             if (w.forecast) {
-                cd[recordKey].forecastTemp = w.temperature_2m;
-                cd[recordKey].forecastHumidity = w.relativehumidity_2m;
+                if (w.temperature_2m) {
+                    cd[recordKey].forecastTemp = w.temperature_2m;
+                }
+                if (w.relativehumidity_2m) {
+                    cd[recordKey].forecastHumidity = w.relativehumidity_2m;
+                }
             } else {
-                cd[recordKey].actualTemp = w.temperature_2m;
-                cd[recordKey].actualHumidity = w.relativehumidity_2m;
+                if (w.temperature_2m) {
+                    cd[recordKey].actualTemp = w.temperature_2m;
+                }
+                if (w.relativehumidity_2m) {
+                    cd[recordKey].actualHumidity = w.relativehumidity_2m;
+                }
             }
         }
-        const sortedData = Object.values(cd).sort((a, b) => {
-            if (dayjs(a.date).isBefore(b.date, "h")) return -1;
-            return 1;
-        });
-        setData(sortedData);
+        setData(Object.values(cd));
     }
 
     function calcFrameSize() {
@@ -80,7 +88,7 @@ const WeatherCompareChart: React.FC = () => {
     }
 
     return (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col overflow-hidden">
             <LineChart width={width} height={height} data={data}>
                 <Line connectNulls type="monotone" dataKey="actualTemp" stroke={colors.secondary} />
                 <Line connectNulls type="monotone" dataKey="forecastTemp" stroke={colors.primary} />
