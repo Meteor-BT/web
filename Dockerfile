@@ -15,7 +15,7 @@ FROM nginx:alpine
 
 COPY --from=build /web/dist /usr/share/nginx/html
 
-# COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN nginx -t
 
