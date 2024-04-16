@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 
 export type WeatherViewType = "daily" | "monthly" | "weekly" | "custom";
 
+export type WeatherComparisonType = "temperature" | "precipitation" | "humidity";
+
 export type WeatherTimeFilters = {
     from: string;
     to: string;
@@ -24,6 +26,8 @@ export type WeatherContext = {
     busy: boolean;
     showForecasts: boolean;
     viewType: WeatherViewType;
+    comparisonType: WeatherComparisonType;
+    setComparisonType: (v: WeatherComparisonType | ((p: WeatherComparisonType) => void)) => void;
     setViewType: (v: WeatherViewType | ((p: WeatherViewType) => WeatherViewType)) => void;
     setLocationFilters: (v: WeatherLocationFilters | ((p: WeatherLocationFilters) => WeatherLocationFilters)) => void;
     setTimeFilters: (v: WeatherTimeFilters | ((p: WeatherTimeFilters) => WeatherTimeFilters)) => void;
@@ -50,6 +54,8 @@ export const weatherContext = createContext<WeatherContext>({
     showForecasts: true,
     busy: false,
     viewType: "daily",
+    comparisonType: "temperature",
+    setComparisonType() {},
     setViewType() {},
     setLocationFilters() {},
     setTimeFilters() {},

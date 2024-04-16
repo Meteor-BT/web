@@ -1,6 +1,6 @@
 import type { WeatherInfo } from "@/types";
 import React, { useEffect, useState } from "react";
-import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType } from "@/modules/weather/weatherContext";
+import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType, WeatherComparisonType } from "@/modules/weather/weatherContext";
 import { weatherContext } from "@/modules/weather/weatherContext";
 import useHttp from "@/common/hooks/useHttp";
 import axios, { AxiosError } from "axios";
@@ -23,6 +23,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [busy, setBusy] = useState(false);
     const [showForecasts, setShowForecasts] = useState(true);
     const [viewType, setViewType] = useState<WeatherViewType>("daily");
+    const [comparisonType, setComparisonType] = useState<WeatherComparisonType>("temperature");
     const { http } = useHttp();
 
     useEffect(() => {
@@ -143,6 +144,8 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 timeFilters,
                 busy,
                 viewType,
+                comparisonType,
+                setComparisonType,
                 setViewType,
                 showForecasts,
                 setLocationFilters,

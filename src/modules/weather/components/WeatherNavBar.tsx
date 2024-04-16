@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useWeather, WeatherViewType } from "@/modules/weather/weatherContext";
+import { useWeather, WeatherComparisonType, WeatherViewType } from "@/modules/weather/weatherContext";
 import Button from "@/common/components/Button";
 import Dropdown from "@/common/components/Dropdown";
 import { FaChevronLeft, FaX } from "react-icons/fa6";
@@ -10,7 +10,7 @@ import { startCase } from "lodash";
 const WeatherNavBar: React.FC = () => {
     const [showFilterPanel, setShowFilterPanel] = useState(false);
 
-    const { showForecasts, viewType, setViewType, timeFilters, locationFilters, setLocationFilters, setShowForecasts } = useWeather();
+    const { showForecasts, viewType, setViewType, timeFilters, locationFilters, setLocationFilters, setShowForecasts, setComparisonType, comparisonType } = useWeather();
     const { countries, cities } = useCitiesInfo(locationFilters.country);
 
     return (
@@ -28,8 +28,18 @@ const WeatherNavBar: React.FC = () => {
                 <div className="w-full invisible hidden md:visible md:flex justify-end items-center gap-4">
                     <Dropdown
                         expand
+                        selectedId={comparisonType}
+                        label="Type"
+                        items={["temperature", "humidity", "precipitation"].map((t) => ({
+                            label: startCase(t),
+                            id: t,
+                            onClick: () => setComparisonType(t as WeatherComparisonType),
+                        }))}
+                    />
+                    <Dropdown
+                        expand
                         selectedId={viewType}
-                        label="Results type"
+                        label="Duration"
                         items={["daily", "weekly", "monthly" /*"custom"*/].map((t) => ({
                             label: startCase(t),
                             id: t,
@@ -64,12 +74,22 @@ const WeatherNavBar: React.FC = () => {
                 </Button>
                 <div
                     className={`min-w-max md:hidden md:invisible visible flex flex-col justify-start items-start gap-4 fixed top-[112px] right-0 bottom-0 bg-neutral-950 p-6 transition-transform
-                ${showFilterPanel ? "" : "translate-x-[120%]"}`}
+                    ${showFilterPanel ? "" : "translate-x-[120%]"}`}
                 >
                     <Dropdown
                         expand
+                        selectedId={comparisonType}
+                        label="Type"
+                        items={["temperature", "humidity", "precipitation"].map((t) => ({
+                            label: startCase(t),
+                            id: t,
+                            onClick: () => setComparisonType(t as WeatherComparisonType),
+                        }))}
+                    />
+                    <Dropdown
+                        expand
                         selectedId={viewType}
-                        label="Results type"
+                        label="Duration"
                         items={["Daily", "Weekly", "Monthly" /*"Custom"*/].map((t) => ({
                             label: t,
                             id: t,

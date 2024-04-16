@@ -12,17 +12,34 @@ type ComparableData = {
     forecastTemp: number | null;
     actualHumidity: number | null;
     forecastHumidity: number | null;
+    forecastPrecipitation: number | null;
+    actualPrecipitation: number | null;
 };
 
 const WeatherCompareChart: React.FC = () => {
     const [data, setData] = useState<ComparableData[]>([]);
-    const { weatherInfo } = useWeather();
     const [width, setWidth] = useState(1600);
     const [height, setHeight] = useState(400);
+    const { weatherInfo, comparisonType } = useWeather();
+    const [forecastDataKey, setForecastDataKey] = useState("forecastTemp");
+    const [actualDataKey, setActualDataKey] = useState("actualTemp");
 
     useEffect(() => {
         prepareChartData();
     }, [weatherInfo]);
+
+    useEffect(() => {
+        switch (comparisonType) {
+            case "humidity":
+                setForecastDataKey("forecastHumidity");
+                setActualDataKey("actualHumidity");
+                break;
+            default:
+                setForecastDataKey("forecastTemp");
+                setActualDataKey("actualTemp");
+                break;
+        }
+    }, [comparisonType, weatherInfo]);
 
     useEffect(() => {
         calcFrameSize();
@@ -48,6 +65,8 @@ const WeatherCompareChart: React.FC = () => {
                     actualTemp: i === 0 ? w.temperature_2m : null,
                     forecastHumidity: i === 0 ? w.relativehumidity_2m : null,
                     actualHumidity: i === 0 ? w.relativehumidity_2m : null,
+                    forecastPrecipitation: null,
+                    actualPrecipitation: null,
                 };
             }
             if (w.forecast) {
@@ -84,14 +103,17 @@ const WeatherCompareChart: React.FC = () => {
         return dayjs(value).format("MMM DD");
     };
     function yAxisTickFormatter(v: any, _: number) {
+        if (comparisonType === "humidity") {
+            return `${v}%`;
+        }
         return `${v}° C`;
     }
 
     return (
         <div className="w-full flex flex-col overflow-hidden">
             <LineChart width={width} height={height} data={data}>
-                <Line connectNulls type="monotone" dataKey="actualTemp" stroke={colors.secondary} />
-                <Line connectNulls type="monotone" dataKey="forecastTemp" stroke={colors.primary} />
+                <Line connectNulls type="monotone" dataKey={actualDataKey} stroke={colors.secondary} dot={<></>} />
+                <Line connectNulls type="monotone" dataKey={forecastDataKey} stroke={colors.primary} dot={<></>} />
                 <YAxis tickFormatter={yAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <XAxis dataKey="date" tickFormatter={xAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <Tooltip content={CustomTooltip} />
