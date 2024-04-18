@@ -107,7 +107,7 @@ const WeatherCompareChart: React.FC = () => {
                 <Line connectNulls type="monotone" dataKey={forecastDataKey} stroke={colors.primary} dot={<></>} />
                 <YAxis tickFormatter={yAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <XAxis dataKey="date" tickFormatter={xAxisTickFormatter} style={{ fontSize: "12px" }} />
-                <Tooltip content={CustomTooltip} />
+                <Tooltip content={CustomTooltip as any} />
                 <Legend formatter={(v) => startCase(v)} />
             </LineChart>
         </div>

@@ -132,13 +132,11 @@ const WeatherNavBar: React.FC = () => {
                             <>
                                 from{" "}
                                 <button disabled={viewType !== "custom"} className="text-teal-500">
-                                    {dayjs(Date.now()).format("MMM DD YYYY")}
+                                    {dayjs(timeFilters.from).format("MMM DD YYYY")}
                                 </button>
                                 {" to "}
                                 <button disabled={viewType !== "custom"} className="text-teal-500">
-                                    {dayjs(Date.now())
-                                        .add(viewType === "weekly" ? 7 : 30, "day")
-                                        .format("MMM DD YYYY")}
+                                    {dayjs(timeFilters.to).format("MMM DD YYYY")}
                                 </button>
                             </>
                         )}

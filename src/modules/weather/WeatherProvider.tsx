@@ -53,29 +53,30 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
     useEffect(() => {
         getWeatherInfo();
-    }, [locationFilters, timeFilters, viewType]);
+    }, [locationFilters, timeFilters]);
 
     useEffect(() => {
-        const t = {
-            from: new Date().toISOString(),
-            to: "",
-        };
+        const t = { from: "", to: "" };
+        const now = dayjs(Date.now());
         switch (viewType.toLowerCase()) {
             case "daily":
+                t.from = now.toISOString();
                 t.to = t.from;
                 break;
             case "weekly":
-                t.to = dayjs(t.from).add(1, "week").toISOString();
+                t.from = now.startOf("week").toISOString();
+                t.to = now.endOf("week").toISOString();
                 break;
             case "monthly":
-                t.to = dayjs(t.from).add(1, "month").toISOString();
+                t.from = now.startOf("month").toISOString();
+                t.to = now.endOf("month").toISOString();
                 break;
         }
         setTimeFilters(t);
     }, [viewType]);
 
     async function getWeatherInfo() {
-        if (!locationFilters.country || !locationFilters.city) {
+        if (busy || !locationFilters.country || !locationFilters.city) {
             return;
         }
         try {
