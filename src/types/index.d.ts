@@ -11,6 +11,16 @@ export type WeatherInfo = {
     forecast: boolean;
 };
 
+export type ComparableData = {
+    date: Date;
+    actualTemp: number | null;
+    forecastTemp: number | null;
+    actualHumidity: number | null;
+    forecastHumidity: number | null;
+    forecastPrecipitation: number | null;
+    actualPrecipitation: number | null;
+};
+
 export type CityInfo = {
     name: string;
     lon: number;

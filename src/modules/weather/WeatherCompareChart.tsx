@@ -5,16 +5,7 @@ import dayjs from "dayjs";
 import { colors, windowSize } from "@/constants";
 import { startCase } from "lodash";
 import CustomTooltip from "@/modules/weather/components/CustomTooltip";
-
-type ComparableData = {
-    date: Date;
-    actualTemp: number | null;
-    forecastTemp: number | null;
-    actualHumidity: number | null;
-    forecastHumidity: number | null;
-    forecastPrecipitation: number | null;
-    actualPrecipitation: number | null;
-};
+import type { ComparableData } from "@/types";
 
 const WeatherCompareChart: React.FC = () => {
     const [data, setData] = useState<ComparableData[]>([]);

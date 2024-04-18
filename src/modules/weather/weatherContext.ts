@@ -27,7 +27,7 @@ export type WeatherContext = {
     showForecasts: boolean;
     viewType: WeatherViewType;
     comparisonType: WeatherComparisonType;
-    setComparisonType: (v: WeatherComparisonType | ((p: WeatherComparisonType) => void)) => void;
+    setComparisonType: (v: WeatherComparisonType | ((p: WeatherComparisonType) => WeatherComparisonType)) => void;
     setViewType: (v: WeatherViewType | ((p: WeatherViewType) => WeatherViewType)) => void;
     setLocationFilters: (v: WeatherLocationFilters | ((p: WeatherLocationFilters) => WeatherLocationFilters)) => void;
     setTimeFilters: (v: WeatherTimeFilters | ((p: WeatherTimeFilters) => WeatherTimeFilters)) => void;
