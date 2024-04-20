@@ -96,7 +96,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             if (!res.data.data || res.data.data.length < 1) {
                 newAlert({
                     title: "No weather data found for selected date and city",
-                    severity: "success",
+                    severity: "warning",
                 });
             }
         } catch (err: any) {
