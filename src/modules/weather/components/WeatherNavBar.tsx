@@ -14,7 +14,6 @@ const WeatherNavBar: React.FC = () => {
     const [showFilterPanel, setShowFilterPanel] = useState(false);
 
     const {
-        showForecasts,
         durationType,
         timeFilters,
         locationFilters,
