@@ -5,6 +5,8 @@ import { weatherContext } from "@/modules/weather/weatherContext";
 import useHttp from "@/common/hooks/useHttp";
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
+import { useAlerts } from "@/modules/alerts/alertsContext";
+import { parseError } from "@/common/utils";
 
 const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [weatherInfo, setWeatherInfo] = useState<WeatherInfo[]>([]);
@@ -25,6 +27,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [viewType, setViewType] = useState<WeatherViewType>("daily");
     const [comparisonType, setComparisonType] = useState<WeatherComparisonType>("temperature");
     const { http } = useHttp();
+    const { newAlert } = useAlerts();
 
     useEffect(() => {
         getPreciseLocation();
@@ -90,8 +93,19 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 },
             });
             setWeatherInfo(res.data.data);
+            if (!res.data.data || res.data.data.length < 1) {
+                newAlert({
+                    title: "No weather data found for selected date and city",
+                    severity: "success",
+                });
+            }
         } catch (err: any) {
             console.error(err?.response || err);
+            newAlert({
+                title: parseError(err),
+                body: "Unable to get weather info!",
+                severity: "error",
+            });
             setWeatherInfo([]);
         } finally {
             setBusy(false);
@@ -132,6 +146,11 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             localStorage.setItem(cacheKey, JSON.stringify(res.data));
         } catch (err) {
             console.error((err as AxiosError).response);
+            newAlert({
+                title: "Unable to find your location.",
+                body: parseError(err),
+                severity: "error",
+            });
         }
     }
 

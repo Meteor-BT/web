@@ -2,18 +2,23 @@ import React, { useRef } from "react";
 import { alertsContext, AlertItem } from "./alertsContext";
 import { v4 } from "uuid";
 
+const alertDuration = 3000; // in ms (1s = 1000ms)
+
 const AlertsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const container = useRef<HTMLDivElement>(null);
 
     function newAlert(a: Omit<AlertItem, "id">) {
         const alertItem: AlertItem = {
-            ...a,
             id: `${v4()}-${a.title.replace(/ /g, "")}`,
+            title: a.title,
+            body: a.body || undefined,
+            severity: a.severity || "info",
         };
 
         const alertElement = document.createElement("div");
         alertElement.id = alertItem.id;
         alertElement.classList.add("alert-container");
+        alertElement.classList.add(alertItem.severity as string);
 
         const alertElementTitle = document.createElement("h5");
         alertElementTitle.innerText = alertItem.title;
@@ -40,7 +45,7 @@ const AlertsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
             alertElement.style.animationName = "out";
             await new Promise((r) => setTimeout(r, 200));
             alertElement.remove();
-        }, 1500);
+        }, alertDuration);
     }
 
     return (

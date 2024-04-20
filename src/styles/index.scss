@@ -37,10 +37,39 @@ body {
 }
 
 .alert-container {
-    @apply p-4 rounded-lg bg-neutral-900 flex flex-col justify-start items-start prose prose-invert prose-sm max-w-[300px] prose-h5:my-0 prose-p:my-0 prose-h5:text-neutral-200 prose-p:text-neutral-400;
+    @apply p-4 rounded-lg flex flex-col justify-start items-start max-w-[300px] text-sm bg-neutral-900;
     animation-name: in;
     animation-duration: 0.2s;
     animation-fill-mode: forwards;
+
+    p {
+        @apply text-xs;
+    }
+
+    &.error {
+        @apply bg-red-950 text-red-300;
+        p {
+            @apply text-red-400;
+        }
+    }
+    &.success {
+        @apply bg-green-950 text-green-300;
+        p {
+            @apply text-green-400;
+        }
+    }
+    &.warning {
+        @apply text-yellow-400;
+        p {
+            @apply text-yellow-500;
+        }
+    }
+    &.info {
+        @apply text-neutral-200;
+        p {
+            @apply text-neutral-400;
+        }
+    }
 
     @keyframes in {
         from {

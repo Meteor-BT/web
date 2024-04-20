@@ -4,6 +4,7 @@ export type AlertItem = {
     id: string;
     title: string;
     body?: string;
+    severity?: "success" | "warning" | "error" | "info";
 };
 
 export type AlertContext = {

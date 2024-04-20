@@ -10,8 +10,19 @@ import { startCase } from "lodash";
 const WeatherNavBar: React.FC = () => {
     const [showFilterPanel, setShowFilterPanel] = useState(false);
 
-    const { showForecasts, viewType, setViewType, timeFilters, locationFilters, setLocationFilters, setShowForecasts, setComparisonType, comparisonType } = useWeather();
-    const { countries, cities } = useCitiesInfo(locationFilters.country);
+    const {
+        showForecasts,
+        viewType,
+        setViewType,
+        timeFilters,
+        locationFilters,
+        setLocationFilters,
+        setShowForecasts,
+        setComparisonType,
+        comparisonType,
+        busy: weatherApiBusy,
+    } = useWeather();
+    const { countries, cities, gettingCitiesInfo } = useCitiesInfo(locationFilters.country);
 
     return (
         <>
@@ -35,6 +46,7 @@ const WeatherNavBar: React.FC = () => {
                             id: t,
                             onClick: () => setComparisonType(t as WeatherComparisonType),
                         }))}
+                        loading={weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -45,6 +57,7 @@ const WeatherNavBar: React.FC = () => {
                             id: t,
                             onClick: () => setViewType(t as WeatherViewType),
                         }))}
+                        loading={weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -55,6 +68,7 @@ const WeatherNavBar: React.FC = () => {
                             id: c,
                             onClick: (id) => setLocationFilters((p) => ({ ...p, country: id, city: "" })),
                         }))}
+                        loading={gettingCitiesInfo || weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -65,6 +79,7 @@ const WeatherNavBar: React.FC = () => {
                             id: c.name,
                             onClick: (id) => setLocationFilters((p) => ({ ...p, city: id })),
                         }))}
+                        loading={gettingCitiesInfo || weatherApiBusy}
                     />
                 </div>
 
@@ -72,6 +87,8 @@ const WeatherNavBar: React.FC = () => {
                     {!showFilterPanel ? <FaChevronLeft /> : <FaX />}
                     Filters
                 </Button>
+
+                {/* mobile filter panel */}
                 <div
                     className={`min-w-max md:hidden md:invisible visible flex flex-col justify-start items-start gap-4 fixed top-[112px] right-0 bottom-0 bg-neutral-950 p-6 transition-transform
                     ${showFilterPanel ? "" : "translate-x-[120%]"}`}
@@ -85,6 +102,7 @@ const WeatherNavBar: React.FC = () => {
                             id: t,
                             onClick: () => setComparisonType(t as WeatherComparisonType),
                         }))}
+                        loading={weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -95,6 +113,7 @@ const WeatherNavBar: React.FC = () => {
                             id: t,
                             onClick: () => setViewType(t.toLowerCase() as WeatherViewType),
                         }))}
+                        loading={weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -105,6 +124,7 @@ const WeatherNavBar: React.FC = () => {
                             id: c,
                             onClick: (id) => setLocationFilters((p) => ({ ...p, country: id })),
                         }))}
+                        loading={gettingCitiesInfo || weatherApiBusy}
                     />
                     <Dropdown
                         expand
@@ -115,6 +135,7 @@ const WeatherNavBar: React.FC = () => {
                             id: c.name,
                             onClick: (id) => setLocationFilters((p) => ({ ...p, city: id })),
                         }))}
+                        loading={gettingCitiesInfo || weatherApiBusy}
                     />
                 </div>
             </nav>
