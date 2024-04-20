@@ -8,6 +8,7 @@ const WeatherPage: React.FC = () => {
         <div className="p-root-container flex flex-col mt-[56px]">
             <WeatherNavBar />
             <WeatherCompareChart />
+            <hr className="my-6 border-neutral-900" />
             <WeatherTable />
         </div>
     );

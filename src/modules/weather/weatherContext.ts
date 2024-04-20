@@ -1,7 +1,7 @@
 import type { WeatherInfo } from "@/types";
 import { createContext, useContext } from "react";
 
-export type WeatherViewType = "daily" | "monthly" | "weekly" | "custom";
+export type WeatherDurationType = "daily" | "monthly" | "weekly" | "custom";
 
 export type WeatherComparisonType = "temperature" | "precipitation" | "humidity";
 
@@ -25,16 +25,29 @@ export type WeatherContext = {
     timeFilters: WeatherTimeFilters;
     busy: boolean;
     showForecasts: boolean;
-    viewType: WeatherViewType;
+    durationType: WeatherDurationType;
     comparisonType: WeatherComparisonType;
+    combinedView: boolean;
+    setCombinedView: (v: boolean | ((p: boolean) => boolean)) => void;
     setComparisonType: (v: WeatherComparisonType | ((p: WeatherComparisonType) => WeatherComparisonType)) => void;
-    setViewType: (v: WeatherViewType | ((p: WeatherViewType) => WeatherViewType)) => void;
+    setDurationType: (v: WeatherDurationType | ((p: WeatherDurationType) => WeatherDurationType)) => void;
     setLocationFilters: (v: WeatherLocationFilters | ((p: WeatherLocationFilters) => WeatherLocationFilters)) => void;
     setTimeFilters: (v: WeatherTimeFilters | ((p: WeatherTimeFilters) => WeatherTimeFilters)) => void;
     setBusy: (v: boolean | ((p: boolean) => boolean)) => void;
     setShowForecasts: (v: boolean | ((p: boolean) => boolean)) => void;
     getWeatherInfo: () => Promise<void>;
     getPreciseLocation: () => Promise<void>;
+};
+
+export type ComparableData = {
+    date: Date;
+    actualTemp: number | null;
+    forecastTemp: number | null;
+    actualHumidity: number | null;
+    forecastHumidity: number | null;
+    forecastPrecipitation: number | null;
+    actualPrecipitation: number | null;
+    errorRate: number;
 };
 
 export const weatherContext = createContext<WeatherContext>({
@@ -53,10 +66,12 @@ export const weatherContext = createContext<WeatherContext>({
     },
     showForecasts: true,
     busy: false,
-    viewType: "daily",
+    durationType: "daily",
     comparisonType: "temperature",
+    combinedView: true,
+    setCombinedView() {},
     setComparisonType() {},
-    setViewType() {},
+    setDurationType() {},
     setLocationFilters() {},
     setTimeFilters() {},
     setBusy() {},

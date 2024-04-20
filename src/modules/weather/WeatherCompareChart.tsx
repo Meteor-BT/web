@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { useWeather } from "@/modules/weather/weatherContext";
+import { useWeather, ComparableData } from "@/modules/weather/weatherContext";
 import dayjs from "dayjs";
 import { colors, windowSize } from "@/constants";
 import { startCase } from "lodash";
 import CustomTooltip from "@/modules/weather/components/CustomTooltip";
-import type { ComparableData } from "@/types";
 
 const WeatherCompareChart: React.FC = () => {
     const [data, setData] = useState<ComparableData[]>([]);
     const [width, setWidth] = useState(1600);
     const [height, setHeight] = useState(400);
-    const { weatherInfo, comparisonType } = useWeather();
+    const { weatherInfo, comparisonType, combinedView } = useWeather();
     const [forecastDataKey, setForecastDataKey] = useState("forecastTemp");
     const [actualDataKey, setActualDataKey] = useState("actualTemp");
 
@@ -30,6 +29,7 @@ const WeatherCompareChart: React.FC = () => {
                 setActualDataKey("actualTemp");
                 break;
         }
+        prepareChartData();
     }, [comparisonType, weatherInfo]);
 
     useEffect(() => {
@@ -58,6 +58,7 @@ const WeatherCompareChart: React.FC = () => {
                     actualHumidity: i === 0 ? w.relativehumidity_2m : null,
                     forecastPrecipitation: null,
                     actualPrecipitation: null,
+                    errorRate: 0,
                 };
             }
             if (w.forecast) {
@@ -74,6 +75,11 @@ const WeatherCompareChart: React.FC = () => {
                 if (w.relativehumidity_2m) {
                     cd[recordKey].actualHumidity = w.relativehumidity_2m;
                 }
+            }
+            if (comparisonType === "temperature") {
+                cd[recordKey].errorRate = (cd[recordKey].actualTemp || 0) - (cd[recordKey].forecastTemp || 0);
+            } else if (comparisonType === "humidity") {
+                cd[recordKey].errorRate = (cd[recordKey].actualHumidity || 0) - (cd[recordKey].forecastHumidity || 0);
             }
         }
         setData(Object.values(cd));
@@ -103,8 +109,14 @@ const WeatherCompareChart: React.FC = () => {
     return (
         <div className="w-full flex flex-col overflow-hidden">
             <LineChart width={width} height={height} data={data}>
-                <Line connectNulls type="monotone" dataKey={actualDataKey} stroke={colors.secondary} dot={<></>} />
-                <Line connectNulls type="monotone" dataKey={forecastDataKey} stroke={colors.primary} dot={<></>} />
+                {combinedView ? (
+                    <>
+                        <Line connectNulls type="monotone" dataKey={actualDataKey} stroke={colors.secondary} dot={<></>} />
+                        <Line connectNulls type="monotone" dataKey={forecastDataKey} stroke={colors.primary} dot={<></>} />
+                    </>
+                ) : (
+                    <Line connectNulls type="monotone" dataKey="errorRate" stroke={"red"} dot={<></>} />
+                )}
                 <YAxis tickFormatter={yAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <XAxis dataKey="date" tickFormatter={xAxisTickFormatter} style={{ fontSize: "12px" }} />
                 <Tooltip content={CustomTooltip as any} />

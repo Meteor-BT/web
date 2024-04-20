@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useWeather, WeatherComparisonType, WeatherViewType } from "@/modules/weather/weatherContext";
+import { useWeather, WeatherComparisonType, WeatherDurationType } from "@/modules/weather/weatherContext";
 import Button from "@/common/components/Button";
 import Dropdown from "@/common/components/Dropdown";
 import { FaChevronLeft, FaX } from "react-icons/fa6";
@@ -7,20 +7,24 @@ import useCitiesInfo from "@/common/hooks/useCitiesInfo";
 import dayjs from "dayjs";
 import { startCase } from "lodash";
 
+const durationTypes = ["daily", "weekly", "monthly" /* "custom" */];
+const comparisonTypes = ["temperature", "humidity" /* "precipitation" */];
+
 const WeatherNavBar: React.FC = () => {
     const [showFilterPanel, setShowFilterPanel] = useState(false);
 
     const {
         showForecasts,
-        viewType,
-        setViewType,
+        durationType,
         timeFilters,
         locationFilters,
-        setLocationFilters,
-        setShowForecasts,
-        setComparisonType,
         comparisonType,
+        combinedView,
         busy: weatherApiBusy,
+        setDurationType,
+        setLocationFilters,
+        setComparisonType,
+        setCombinedView,
     } = useWeather();
     const { countries, cities, gettingCitiesInfo } = useCitiesInfo(locationFilters.country);
 
@@ -28,11 +32,11 @@ const WeatherNavBar: React.FC = () => {
         <>
             <nav className="fixed z-[1] top-[56px] left-0 right-0 h-[56px] bg-black border-b border-b-neutral-900 flex flex-row items-center justify-start p-root-container">
                 <div className="flex flex-row gap-2 items-center justify-start">
-                    <Button variant={showForecasts ? "solid" : "text"} onClick={() => setShowForecasts(true)}>
-                        Forecasts
+                    <Button variant={combinedView ? "solid" : "text"} onClick={() => setCombinedView(true)}>
+                        Combined
                     </Button>
-                    <Button variant={!showForecasts ? "solid" : "text"} onClick={() => setShowForecasts(false)}>
-                        Actual data
+                    <Button variant={!combinedView ? "solid" : "text"} onClick={() => setCombinedView(false)}>
+                        Error Rate
                     </Button>
                 </div>
 
@@ -40,8 +44,8 @@ const WeatherNavBar: React.FC = () => {
                     <Dropdown
                         expand
                         selectedId={comparisonType}
-                        label="Type"
-                        items={["temperature", "humidity", "precipitation"].map((t) => ({
+                        label="Compare"
+                        items={comparisonTypes.map((t) => ({
                             label: startCase(t),
                             id: t,
                             onClick: () => setComparisonType(t as WeatherComparisonType),
@@ -50,12 +54,12 @@ const WeatherNavBar: React.FC = () => {
                     />
                     <Dropdown
                         expand
-                        selectedId={viewType}
+                        selectedId={durationType}
                         label="Duration"
-                        items={["daily", "weekly", "monthly" /*"custom"*/].map((t) => ({
+                        items={durationTypes.map((t) => ({
                             label: startCase(t),
                             id: t,
-                            onClick: () => setViewType(t as WeatherViewType),
+                            onClick: () => setDurationType(t as WeatherDurationType),
                         }))}
                         loading={weatherApiBusy}
                     />
@@ -97,7 +101,7 @@ const WeatherNavBar: React.FC = () => {
                         expand
                         selectedId={comparisonType}
                         label="Type"
-                        items={["temperature", "humidity", "precipitation"].map((t) => ({
+                        items={comparisonTypes.map((t) => ({
                             label: startCase(t),
                             id: t,
                             onClick: () => setComparisonType(t as WeatherComparisonType),
@@ -106,12 +110,12 @@ const WeatherNavBar: React.FC = () => {
                     />
                     <Dropdown
                         expand
-                        selectedId={viewType}
+                        selectedId={durationType}
                         label="Duration"
-                        items={["Daily", "Weekly", "Monthly" /*"Custom"*/].map((t) => ({
+                        items={durationTypes.map((t) => ({
                             label: t,
                             id: t,
-                            onClick: () => setViewType(t.toLowerCase() as WeatherViewType),
+                            onClick: () => setDurationType(t.toLowerCase() as WeatherDurationType),
                         }))}
                         loading={weatherApiBusy}
                     />
@@ -143,7 +147,7 @@ const WeatherNavBar: React.FC = () => {
             <div className="w-full min-h-max py-6 flex flex-col gap-8">
                 <div className="w-full flex flex-col">
                     <h3 className="text-xl text-neutral-200">
-                        Weather {showForecasts ? "forecasts" : "info"}{" "}
+                        Weather info{" "}
                         {dayjs(timeFilters.from).isSame(timeFilters.to, "day") && (
                             <>
                                 of <span className="text-teal-500">{new Date().toDateString()}</span>
@@ -152,11 +156,11 @@ const WeatherNavBar: React.FC = () => {
                         {!dayjs(timeFilters.from).isSame(timeFilters.to, "day") && (
                             <>
                                 from{" "}
-                                <button disabled={viewType !== "custom"} className="text-teal-500">
+                                <button disabled={durationType !== "custom"} className="text-teal-500">
                                     {dayjs(timeFilters.from).format("MMM DD YYYY")}
                                 </button>
                                 {" to "}
-                                <button disabled={viewType !== "custom"} className="text-teal-500">
+                                <button disabled={durationType !== "custom"} className="text-teal-500">
                                     {dayjs(timeFilters.to).format("MMM DD YYYY")}
                                 </button>
                             </>

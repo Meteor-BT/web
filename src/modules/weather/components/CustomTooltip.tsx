@@ -1,7 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
-import { WeatherComparisonType, useWeather } from "@/modules/weather/weatherContext";
-import type { ComparableData } from "@/types";
+import { WeatherComparisonType, useWeather, ComparableData } from "@/modules/weather/weatherContext";
 
 type Props = {
     active: boolean;
@@ -43,14 +42,25 @@ const CompareValues: React.FC<ChildProps> = ({ comparisonType, payload }) => {
 
 const CustomTooltip: React.FC<Props> = ({ active, payload }) => {
     const data = payload ? payload[0] : null;
-    const { comparisonType } = useWeather();
+    const { comparisonType, combinedView } = useWeather();
 
     if (!active || !data) return <></>;
 
     return (
         <div className="rounded-lg bg-neutral-900 text-xs flex flex-col">
             <p className="p-2 bg-neutral-950 text-neutral-200">{dayjs(data.payload.date).format("MMM DD[ at ]HH:MM a")}</p>
-            <CompareValues comparisonType={comparisonType} payload={data.payload} />
+            {combinedView ? (
+                <CompareValues comparisonType={comparisonType} payload={data.payload} />
+            ) : (
+                <div className="p-2 text-neutral-400">
+                    Difference{" "}
+                    <span className="text-red-400">
+                        {data.payload.errorRate > 0 ? "+" : ""}
+                        {data.payload.errorRate.toFixed(2)}
+                        {comparisonType === "temperature" ? " °C" : "%"}
+                    </span>
+                </div>
+            )}
         </div>
     );
 };

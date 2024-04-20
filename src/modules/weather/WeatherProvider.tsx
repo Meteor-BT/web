@@ -1,6 +1,6 @@
 import type { WeatherInfo } from "@/types";
 import React, { useEffect, useState } from "react";
-import type { WeatherTimeFilters, WeatherLocationFilters, WeatherViewType, WeatherComparisonType } from "@/modules/weather/weatherContext";
+import type { WeatherTimeFilters, WeatherLocationFilters, WeatherDurationType, WeatherComparisonType } from "@/modules/weather/weatherContext";
 import { weatherContext } from "@/modules/weather/weatherContext";
 import useHttp from "@/common/hooks/useHttp";
 import axios, { AxiosError } from "axios";
@@ -24,8 +24,9 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     });
     const [busy, setBusy] = useState(false);
     const [showForecasts, setShowForecasts] = useState(true);
-    const [viewType, setViewType] = useState<WeatherViewType>("daily");
+    const [durationType, setDurationType] = useState<WeatherDurationType>("daily");
     const [comparisonType, setComparisonType] = useState<WeatherComparisonType>("temperature");
+    const [combinedView, setCombinedView] = useState(true);
     const { http } = useHttp();
     const { newAlert } = useAlerts();
 
@@ -61,7 +62,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     useEffect(() => {
         const t = { from: "", to: "" };
         const now = dayjs(Date.now());
-        switch (viewType.toLowerCase()) {
+        switch (durationType.toLowerCase()) {
             case "daily":
                 t.from = now.toISOString();
                 t.to = t.from;
@@ -76,7 +77,7 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 break;
         }
         setTimeFilters(t);
-    }, [viewType]);
+    }, [durationType]);
 
     async function getWeatherInfo() {
         if (busy || !locationFilters.country || !locationFilters.city) {
@@ -163,10 +164,12 @@ const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 locationFilters,
                 timeFilters,
                 busy,
-                viewType,
+                durationType,
                 comparisonType,
+                combinedView,
+                setCombinedView,
                 setComparisonType,
-                setViewType,
+                setDurationType,
                 showForecasts,
                 setLocationFilters,
                 setTimeFilters,
